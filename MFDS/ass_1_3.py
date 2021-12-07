@@ -75,4 +75,4 @@ for n in range(1, 11):
     max_op = (m*(m+1))/2 + (2*(2*m**3+3*m**2-5*m)/6) + 2*(m*(m+1)/2-m)
 
 
-    print(n*10, n_op_p, n_op_np, max_op-n_op_np,2*(m*(m+1)/2-m), n_swap)
+    print(n*10, n_op_p, n_op_np, max_op, n_swap)
