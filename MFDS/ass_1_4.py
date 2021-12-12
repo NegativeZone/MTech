@@ -30,9 +30,13 @@ t_div = (stop-start)/(10**6)
 
 
 def round_sig(x, d=5):
+    # x_positive = np.where(np.isfinite(x) & (x != 0), np.abs(x), 10**(d-1))
+    # mags = 10 ** (d - 1 - np.floor(np.log10(x_positive)))
+    # return np.round(x * mags) / mags
     if x == 0:
         return x
-    return round(x, d - math.floor(math.log10(abs(x))) - 1)
+    # return round(x, d - math.floor(math.log10(abs(x))) - 1)
+    return x
 
 # Moved the back substitution process into its own subfunction for clarity
 def back_substitution(A, b, n):
@@ -103,13 +107,25 @@ for n in range(1, 11):
     y2_res.append(t_pivot)
     y3_res.append(t_nopivot)
 
+for i in range(len(x_res)):
+    x_res[i] = math.log(x_res[i])
+    y2_res[i] = math.log(y2_res[i])
+    y3_res[i] = math.log(y3_res[i])
 
 # plt.plot(x_res, y1_res, color='r', label='theoretical')
 
-plt.plot(x_res, y2_res, color='g', label='pivot')
-plt.plot(np.unique(x_res), np.poly1d(np.polyfit(x_res, y2_res, 1))(np.unique(x_res)))
+plt.scatter(x_res, y2_res, color='g', label='pivot')
+plt.plot(np.unique(x_res), np.poly1d(np.polyfit(x_res, y2_res, 1))(np.unique(x_res)), label= np.polyfit(x_res, y2_res, 1)[0])
 # plt.plot(x_res, y3_res, color='b', label='no pivot')
 slope = np.polyfit(x_res, y2_res, 1)
+plt.xlabel(" Log of Matrix Size")
+plt.ylabel("Log of Runtime")
+plt.legend()
+plt.show()
+plt.scatter(x_res, y3_res, color='r', label='pivot')
+plt.plot(np.unique(x_res), np.poly1d(np.polyfit(x_res, y3_res, 1))(np.unique(x_res)), label= np.polyfit(x_res, y2_res, 1)[0])
+# plt.plot(x_res, y3_res, color='b', label='no pivot')
+slope = np.polyfit(x_res, y3_res, 1)
 print(slope[0])
 plt.xlabel("Matrix Size")
 plt.ylabel("Runtime")

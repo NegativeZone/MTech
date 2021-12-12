@@ -1,6 +1,7 @@
 import itertools
 import numpy as np
 import math
+import matplotlib.pyplot as plt
 
 def isDiagDom(A):
     n = len(A)
@@ -68,7 +69,7 @@ def jacobi(a, x ,b):
         res[j] = d / a[j][j]
     return res
 
-for n in range(1, 10000):
+for n in range(1, 50000):
     x = [0, 0, 0, 0]
     A = np.random.rand(4,4)
     A = A*10
@@ -77,6 +78,9 @@ for n in range(1, 10000):
     a = A.tolist()
     b = B[0].tolist()
     if isDiagDomSwapped(a) == True:
+        x_res = []
+        y1_res = []
+        y2_res = []
         print(a)
         print(b)
         D = diagonal(a, 4, 4)
@@ -101,16 +105,42 @@ for n in range(1, 10000):
         print(math.sqrt(frob))
         print("Jacobi")
         for i in range(0, 10):
+            x_prev = x.copy()
             x = jacobi(a, x, b)
+            x_res.append(i)
+            x_frob_mat = []
+            x_frob = 0
+            for i in range(len(x)):
+                x_frob_mat.append(x[i]-x_prev[i])
+            for i in range(len(x_frob_mat)):
+                x_frob += x_frob_mat[i]**2
+            y1_res.append(math.sqrt(x_frob))
             print(x)
         x = [0, 0, 0, 0]
         print("Seidel")
         for i in range(0, 10):
+            x_prev = x.copy()
             x = seidel(a, x, b)
+            x_frob_mat = []
+            x_frob = 0
+            for i in range(len(x)):
+                x_frob_mat.append(x[i]-x_prev[i])
+            for i in range(len(x_frob_mat)):
+                x_frob += x_frob_mat[i]**2
+            y2_res.append(math.sqrt(x_frob))
             print(x)
+        plt.plot(x_res, y1_res, color='g', label='jacobi')
+        plt.plot(x_res, y2_res, color='r', label='seidel')
+        plt.xlabel("Iteration")
+        plt.ylabel("Frobenius Norm of x(k+1) - x(k) matrix")
+        plt.legend()
+        plt.show()
         break
     elif isDiagDomSwapped(a) == 'Swap':
-        for k in list(itertools.permutations(A)):
+        x_res = []
+        y1_res = []
+        y2_res = []
+        for k in list(itertools.permutations(a)):
             ans = isDiagDom(k)
             if  ans == True:
                 print(k)
@@ -137,11 +167,37 @@ for n in range(1, 10000):
                 print("Frobenius = ", math.sqrt(frob))
                 print("Jacobi")
                 for i in range(0, 10):
+                    x_prev = x.copy()
                     x = jacobi(k, x, b)
+                    x_res.append(i)
+                    x_frob_mat = []
+                    x_frob = 0
+                    for i in range(len(x)):
+                        x_frob_mat.append(x[i]-x_prev[i])
+                    for i in range(len(x_frob_mat)):
+                        x_frob += x_frob_mat[i]**2
+                    y1_res.append(math.sqrt(x_frob))
                     print(x)
                 x = [0, 0, 0, 0]
                 print("Seidel")
                 for i in range(0, 10):
+                    x_prev = x.copy()
                     x = seidel(k, x, b)
+                    x_frob_mat = []
+                    x_frob = 0
+                    for i in range(len(x)):
+                        x_frob_mat.append(x[i]-x_prev[i])
+                    for i in range(len(x_frob_mat)):
+                        x_frob += x_frob_mat[i]**2
+                    y2_res.append(math.sqrt(x_frob))
                     print(x)
+                print(x_res)
+                print(y1_res)
+                plt.plot(x_res, y1_res, color='g', label='jacobi')
+                plt.plot(x_res, y2_res, color='r', label='seidel')
+                plt.xlabel("Iteration")
+                plt.ylabel("Frobenius Norm of x(k+1) - x(k) matrix")
+                plt.legend()
+                plt.show()
                 break
+            break

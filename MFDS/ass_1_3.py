@@ -4,7 +4,8 @@ import math
 def round_sig(x, d=5):
     if x == 0:
         return x
-    return round(x, d - math.floor(math.log10(abs(x))) - 1)
+    # return round(x, d - math.floor(math.log10(abs(x))) - 1)
+    return x
 
 # Moved the back substitution process into its own subfunction for clarity
 def back_substitution(A, b, n, n_op, n_swap=0):
@@ -57,8 +58,8 @@ def gauss_elimination_pivoting(A, b, n_op, n_swap):
     return back_substitution(A, b, n, n_op, n_swap)
 
 for n in range(1, 11):
-    A = np.random.rand(n*10,n*10)
-    b = np.random.rand(n*10)
+    A = np.random.rand(n*100,n*100)
+    b = np.random.rand(n*100)
     A = A*10
     b = b*10
     for i in range(0, n):
@@ -70,9 +71,9 @@ for n in range(1, 11):
     n_swap = 0
     X, n_op_np, n_swap = gauss_elimination(A, b, n_op_np)
     X, n_op_p, n_swap = gauss_elimination_pivoting(A, b, n_op_p, n_swap)
-    m=float(n*10)
+    m=float(n*100)
 
     max_op = (m*(m+1))/2 + (2*(2*m**3+3*m**2-5*m)/6) + 2*(m*(m+1)/2-m)
 
 
-    print(n*10, n_op_p, n_op_np, max_op, n_swap)
+    print(n*100, n_op_p, n_op_np, max_op, n_swap)

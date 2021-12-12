@@ -1,11 +1,6 @@
 import numpy as np
 import math
 
-A = np.array([[2,4],[3,9]])
-b = np.array([2,30])
-# A = np.array([[8,-2,-1,0,0],[-2,9,-4,-1,0],[-1,-3,7,-1,2],[0,-4,-2,12,-5],[0,0,-7,-3,15]])
-# b = np.array([5,2,0,1,5])
-
 # Rounding function for significant figures
 def round_sig(x, d=5):
     if x == 0:
@@ -45,9 +40,7 @@ def gauss_elimination_pivoting(A, b):
         for i in range(row+1, n):
             if np.abs(A[i, row]) > np.abs(A[row, row]):
                 A[[row, i]] = A[[i, row]]
-                temp = b[row]
-                b[row] = b[i]
-                b[i] = temp
+                b[row], b[i] = b[i], b[row]
                 break
         for i in range(row+1, n):
             factor = round_sig(A[i,row] / A[row,row])
@@ -55,6 +48,11 @@ def gauss_elimination_pivoting(A, b):
                 A[i,j] = round_sig(A[i,j] - factor * A[row,j])
             b[i] = round_sig(b[i] - factor * b[row])
     return back_substitution(A, b, n)
+
+A = np.array([[2,4],[3,9]])
+b = np.array([2,30])
+# A = np.array([[8,-2,-1,0,0],[-2,9,-4,-1,0],[-1,-3,7,-1,2],[0,-4,-2,12,-5],[0,0,-7,-3,15]])
+# b = np.array([5,2,0,1,5])
 
 print(gauss_elimination_pivoting(A, b))
 print(gauss_elimination(A, b))
